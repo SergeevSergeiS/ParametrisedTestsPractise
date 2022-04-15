@@ -5,6 +5,20 @@ public class ExpectedResultCalculator {
         return String.valueOf(Integer.parseInt(number) + 1);
     }
 
+    public String getData(String number, String action) {
+        switch (action) {
+            case "+":
+                return String.valueOf(Integer.parseInt(number) + Integer.parseInt(number));
+            case "-":
+                return String.valueOf(Integer.parseInt(number) - Integer.parseInt(number));
+            case "*":
+                return String.valueOf(Integer.parseInt(number) * Integer.parseInt(number));
+            case "/":
+                return String.valueOf(Integer.parseInt(number) / Integer.parseInt(number));
+        }
+        return "0";
+    }
+
     public String getData(String firstNumber, String action, String secondNumber) {
         switch (action) {
             case "+":

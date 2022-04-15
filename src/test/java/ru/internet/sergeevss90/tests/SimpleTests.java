@@ -5,11 +5,10 @@ import com.codeborne.selenide.Selenide;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.*;
+import ru.internet.sergeevss90.data.EnumForNumbers;
 import ru.internet.sergeevss90.data.ExpectedResultCalculator;
 import ru.internet.sergeevss90.pages.CalculatorPage;
-
 import java.util.stream.Stream;
-
 import static com.codeborne.selenide.Selectors.byName;
 import static com.codeborne.selenide.Selenide.$;
 
@@ -61,7 +60,7 @@ public class SimpleTests {
 
     @ParameterizedTest(name = "Подсчитаем {0} {1} {2}")
     @DisplayName("Проверим базовые целочесленные операции (CsvSource)")
-    void csvSourceForm(String firstNumber, String action, String secondNumber) {
+    void csvSourceTest(String firstNumber, String action, String secondNumber) {
         expectedData = expectedResultCalculator.getData(firstNumber, action, secondNumber);
         calculatorPage.useNumber(firstNumber)
                 .action(action)
@@ -70,7 +69,7 @@ public class SimpleTests {
                 .displayValueCheck(expectedData);
     }
 
-    static Stream<Arguments> methodSourceExampleTest() {
+    static Stream<Arguments> methodSourceTest() {
         return Stream.of(
                 Arguments.of("3", "+", "3"),
                 Arguments.of("3", "-", "3"),
@@ -80,9 +79,9 @@ public class SimpleTests {
     }
 
     @DisplayName("Проверим базовые целочесленные операции (MethodSource)")
-    @MethodSource("methodSourceExampleTest")
+    @MethodSource("methodSourceTest")
     @ParameterizedTest(name = "Подсчитаем {0} {1} {2}")
-    void methodSourceExampleTest(String firstNumber, String action, String secondNumber) {
+    void methodSourceTest(String firstNumber, String action, String secondNumber) {
         expectedData = expectedResultCalculator.getData(firstNumber, action, secondNumber);
         calculatorPage.useNumber(firstNumber)
                 .action(action)
@@ -90,16 +89,29 @@ public class SimpleTests {
                 .calculate()
                 .displayValueCheck(expectedData);
     }
-    /*
-    @EnumSource(TitleEnum.class)
-    @ParameterizedTest(name = "Проверка с помощью Enum")
-    void enumSourceTest(TitleEnum testData) {
-        textBoxPage.openPage().userFormTitle(testData.rusName);
-        System.out.println(testData.rusName);
-        Assertions.assertEquals("Text Box", testData.rusName);
-    }
-    */
 
+    @DisplayName("Проверка квадратов (EnumSource)")
+    @EnumSource(EnumForNumbers.class)
+    @ParameterizedTest(name = "Проверка квадрата {0}")
+    void enumSourceTest(EnumForNumbers testData) {
+        expectedData = expectedResultCalculator.getData(testData.number, "*");
+        calculatorPage.useNumber(testData.number)
+                .action("*")
+                .useNumber(testData.number)
+                .calculate()
+                .displayValueCheck(expectedData);
+    }
+
+    @DisplayName("Повторение - мать учения")
+    @RepeatedTest (value = 6, name = "Прогон {currentRepetition} из {totalRepetitions}")
+    void multiply() {
+        expectedData = expectedResultCalculator.getData("6", "*");
+        calculatorPage.useNumber("6")
+                .action("*")
+                .useNumber("6")
+                .calculate()
+                .displayValueCheck(expectedData);
+    }
     @AfterEach
     void clearResult() {
         $(byName("clearButton")).click();
