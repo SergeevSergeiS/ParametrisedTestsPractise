@@ -8,7 +8,9 @@ import org.junit.jupiter.params.provider.*;
 import ru.internet.sergeevss90.data.EnumForNumbers;
 import ru.internet.sergeevss90.data.ExpectedResultCalculator;
 import ru.internet.sergeevss90.pages.CalculatorPage;
+
 import java.util.stream.Stream;
+
 import static com.codeborne.selenide.Selectors.byName;
 import static com.codeborne.selenide.Selenide.$;
 
@@ -103,7 +105,7 @@ public class SimpleTests {
     }
 
     @DisplayName("Повторение - мать учения")
-    @RepeatedTest (value = 6, name = "Прогон {currentRepetition} из {totalRepetitions}")
+    @RepeatedTest(value = 6, name = "Прогон {currentRepetition} из {totalRepetitions}")
     void multiply() {
         expectedData = expectedResultCalculator.getData("6", "*");
         calculatorPage.useNumber("6")
@@ -112,6 +114,7 @@ public class SimpleTests {
                 .calculate()
                 .displayValueCheck(expectedData);
     }
+
     @AfterEach
     void clearResult() {
         $(byName("clearButton")).click();
